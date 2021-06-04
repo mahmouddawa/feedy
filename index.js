@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res)=>{
-  res.send({ Initial : 'Initial commit!'});
+  res.send({ Initial : 'Initial commit, to test the heroku deployment'});
 })
 
 const PORT = process.env.PORT || 5000;
