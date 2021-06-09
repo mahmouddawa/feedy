@@ -8,3 +8,7 @@ else{
 }
 
 
+//this flexibility of requiring files(for prod/dev) for common JS modules "require" in the JS is
+// not available when we use the 2015 "import/export/export default" modules synatx
+
+
