@@ -18,5 +18,5 @@ const surveySchema = new Schema({
 mongoose.model("survey", surveySchema);
 
 //every collection can save only 4 MB!
-// for the subdomain collections like the Recipient every Recipient can save only 4 MB
-// in case our survey was a subdomain collection as well, we might face some storage errros.
+// for the subdoc collections like the Recipient every Recipient can save only 4 MB
+// in case our survey was a subdoc collection as well, we might face some storage errros.
