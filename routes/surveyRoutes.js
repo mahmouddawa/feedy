@@ -3,24 +3,22 @@ const requireLogin = require("../middlewares/requireLogin");
 const requireCredits = require("../middlewares/requireCredits");
 
 
-const Survey = mongoose.model('surveys')
+const Survey = mongoose.model("survey");
 
 module.exports = (app) => {
-  app.post("/api/surveys",  requireLogin,requireCredits, async (req, res) => {
-    const { title, subject, body, recipients } =req.body;
-    
+  app.post("/api/survey", requireLogin, requireCredits, async (req, res) => {
+    const { title, subject, body, recipients } = req.body;
+
     const survey = await new Survey({
       title,
       body,
       subject,
-      recipients: recipients.split(',').map(email=>({email: email.trim()})), // why the return value was ({}) read down
+      recipients: recipients
+        .split(",")
+        .map((email) => ({ email: email.trim() })), // why the return value is ({}) read down
       _user: req.user.id,
       dateSent: Date.now(),
-
     });
-
-    
-
   });
 };
 
