@@ -1,14 +1,16 @@
 import React from "react";
 
-export default ({ input, label }) => {
-  console.log(input);
+const SurveyField = ({ input, label, meta: { error, touched } }) => {
   return (
     <div>
       <label>{label}</label>
-      <input {...input} />
+      <input {...input} style={{ marginBottom: "5px" }} />
+      <div className="red-text" style={{ marginBottom: "20px" }}>
+        {touched && error}
+      </div>
     </div>
   );
 };
-
+export default SurveyField;
 //<input {...input} /> adding the {...input} means to pass all the properties that are
 //provided on the props.input
