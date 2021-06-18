@@ -1,17 +1,41 @@
+import _ from "lodash";
 import React from "react";
+import { connect } from "react-redux";
+import formFields from "./formFields";
+import {withRouter} from 'react-router-dom';
+import * as actions from '../../actions';
 
-const SurveyFormReview = ({ onCancel }) => {
+const SurveyFormReview = ({ onCancel, formValues, submitSurvey, history }) => {
+  const reviewFields = _.map(formFields, ({  name,  label  }) =>  {
+    return  (
+      <div key={name}>
+        <label>{label}</label>
+        <div>{formValues[name]}</div>
+      </div>
+    );
+  });
+
   return (
     <div>
       <h5>confirm your entries</h5>
-      <button className="yellow darken-3 btn-flat" onClick={onCancel}>
+            {reviewFields}
+      <button className="yellow darken-3 white-text btn-flat" onClick={onCancel}>
         Back
+      </button>
+      <button
+      onClick={()=>submitSurvey(formValues, history)}
+       className="green  btn-flat right white-text">
+        Send Survey
+        <i className="material-icons right">email</i>
       </button>
     </div>
   );
 };
 
-export default SurveyFormReview;
+function mapStateToProps(state) {
+  return {
+    formValues: state.form.surveyForm.values,
+  };
+}
 
-// when we use the back buttom the redux-form will dump all the form data in memory
-//this make sense so the use when he come back to the form he will find a new form
+export default connect(mapStateToProps, actions)(withRouter(SurveyFormReview));

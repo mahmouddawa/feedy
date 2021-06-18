@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { reduxForm } from "redux-form";
 import SurveyForm from "./SurveyForm";
 import SurveyFormReview from "./SurveyFormReview";
 
@@ -20,4 +21,10 @@ class SurveyNew extends Component {
     );
   }
 }
-export default SurveyNew;
+export default reduxForm({
+  form: "surveyForm",
+})(SurveyNew);
+
+
+// i added the reduxForm to dump the values from the form if i navigate out of the 
+//surveyFormReview, there i disabled the ability to clear the form.

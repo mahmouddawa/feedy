@@ -4,16 +4,12 @@ import { reduxForm, Field } from "redux-form";
 import SurveyField from "./SurveyField";
 import { Link } from "react-router-dom";
 import validateEmails from '../../utils/validateEmails';
+import formFields from "./formFields";
 
-const FIELDS = [
-  { label: "Survey Title", name: "title" },
-  { label: "Subject Line", name: "subject" },
-  { label: "Email Body", name: "body" },
-  { label: "Recipient List", name: "Emails" },
-];
+
 class SurveyForm extends Component {
   renderFields() {
-    return _.map(FIELDS, ({ label, name }) => {
+    return _.map(formFields, ({ label, name }) => {
       return (
         <Field
           key={name}
@@ -48,8 +44,8 @@ class SurveyForm extends Component {
 
 function validate(values) {
   const errors = {};
-  errors.emails = validateEmails(values.emails || '');
-  _.each(FIELDS, ({ name }) => {
+  errors.recipients = validateEmails(values.recipients || "");
+  _.each(formFields, ({ name }) => {
     if (!values[name]) {
       //      errors[name] = `you must provide  ${name}`;
       errors[name] = "you must provide a value";
@@ -63,4 +59,9 @@ function validate(values) {
 export default reduxForm({
   validate,
   form: "surveyForm",
+  destroyOnUnmount: false,
 })(SurveyForm);
+
+// when we use the back buttom the redux-form will dump all the form data in memory
+//this make sense so the use when he come back to the form he will find a new form
+// that's why i set the destroyOnUnmount to false
