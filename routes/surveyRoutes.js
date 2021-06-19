@@ -13,10 +13,11 @@ module.exports = (app) => {
   app.get("/api/surveys/yes", (req, res) => {
     res.send("thank you for the feedback! ");
   });
-  const p = new Path('/api/surveys/:surveyId/:choice');
   
   app.post("/api/surveys/webhooks", (req, res) => {
-    const events = _.chain(req.body)
+    const p = new Path('/api/surveys/:surveyId/:choice');
+    
+      const events = _.chain(req.body)
       .map( ({email,url})=>{
         const match = p.test(new URL(url).pathname) ;
         if(match){
@@ -25,8 +26,23 @@ module.exports = (app) => {
       })
       .compact()
       .unionBy('email', 'surveyId')
+      .each(({ surveyId, email, choice }) => {
+        Survey.updateOne(
+          {
+            _id: surveyId,
+            recipients: {
+              $elemMatch: { email: email}, // $elemMatch: { email: email, response: false},
+            },
+          },
+          {
+            $inc: { [choice]: 1 },
+            $set: { 'recipients.$.response': true },
+          }
+        ).exec();
+      })
       .value();
-    console.log(events);
+
+      console.log(events);
     res.send({});
   });
 
