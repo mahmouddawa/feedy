@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FETCH_USER, SUBMIT_SURVEY } from "./types";
+import { FETCH_USER, SUBMIT_SURVEY, FETCH_SURVEYS } from "./types";
 
 //redux-thunk will check if we are returning a function, it will pass the dispatch as an argument
 export const fetchUser = () => async (dispatch) => {
@@ -16,5 +16,10 @@ export const submitSurvey = (values, history) => async (dispatch) => {
   const res = await axios.post("/api/surveys", values);
   history.push("/surveys");
   dispatch({ type: SUBMIT_SURVEY, payload: res.data });
+};
+
+export const fetchSurveys = () => async (dispatch) => {
+  const res = await axios.get("/api/surveys");
+  dispatch({ type: FETCH_SURVEYS, payload: res.data });
 };
 
