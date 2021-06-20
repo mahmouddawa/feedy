@@ -25,32 +25,30 @@ module.exports = (app) => {
     const p = new Path('/api/surveys/:surveyId/:choice');
     
       const events = _.chain(req.body)
-      .map( ({email,url})=>{
-        const match = p.test(new URL(url).pathname) ;
-        if(match){
-          return {email, surveyId: match.surveyId, choice: match.choice}
-        }
-      })
-      .compact()
-      .unionBy('email', 'surveyId')
-      .each(({ surveyId, email, choice }) => {
-        Survey.updateOne(
-          {
-            _id: surveyId,
-            recipients: {
-              $elemMatch: { email: email }, // $elemMatch: { email: email, response: false},
-            },
-          },
-          {
-            $inc: { [choice]: 1 },
-            $set: { "recipients.$.response": true },
-            lastResponded: new Date(),
+        .map(({ email, url }) => {
+          const match = p.test(new URL(url).pathname);
+          if (match) {
+            return { email, surveyId: match.surveyId, choice: match.choice };
           }
-        ).exec();
-      })
-      .value();
-
-      console.log(events);
+        })
+        .compact()
+        .unionBy("email", "surveyId")
+        .each(({ surveyId, email, choice }) => {
+          Survey.updateOne(
+            {
+              _id: surveyId,
+              recipients: {
+                $elemMatch: { email: email }, // $elemMatch: { email: email, response: false},
+              },
+            },
+            {
+              $inc: { [choice]: 1 },
+              $set: { "recipients.$.response": true },
+              lastResponded: new Date(),
+            }
+          ).exec();
+        })
+        .value();
     res.send({});
   });
 
